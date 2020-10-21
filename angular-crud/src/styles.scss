@@ -1,0 +1,65 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/theming';
+@include mat-core();
+$light-primary: mat-palette($mat-indigo);
+$light-accent: mat-palette($mat-pink, A200, A100, A400);
+$light-theme: mat-light-theme($light-primary, $light-accent);
+$dark-primary: mat-palette($mat-pink);
+$dark-accent: mat-palette($mat-indigo, A200, A100, A400);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+@media (prefers-color-scheme: light) {
+    @include angular-material-theme($light-theme);
+}
+
+@media (prefers-color-scheme: dark) {
+    @include angular-material-theme($dark-theme);
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0 !important;
+    height: 100%;
+    background-color: rgb(235, 235, 235);
+}
+
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+
+label {
+    font-family: Roboto;
+}
+
+.spacer {
+    flex: 1 1 auto !important;
+}

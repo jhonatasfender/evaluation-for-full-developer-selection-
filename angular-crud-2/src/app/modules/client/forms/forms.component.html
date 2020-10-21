@@ -1,0 +1,164 @@
+<div class="animated fadeIn mat-elevation-z20">
+    <mat-card>
+        <mat-card-header>
+            <i class="material-icons">supervised_user_circle</i>
+            <mat-card-title>Cadastrar Cliente</mat-card-title>
+            <mat-card-subtitle>nessa tela o usuário tem a possibilidade de cadastrar</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content *ngIf="frm">
+            <div class="backgroud-black" *ngIf="isLoading">
+                <div class="table-loading-shade">
+                    <mat-spinner></mat-spinner>
+                </div>
+            </div>
+
+            <div mat-dialog-content>
+                <form [formGroup]="frm">
+                    <mat-form-field>
+                        <input matInput placeholder="Nome do Cliente" formControlName="name" class="person-input">
+                        <mat-hint align="end">{{frm.controls.name.value?.length || 3}}/100</mat-hint>
+                        <mat-error *ngIf="frm.controls.name.invalid">{{getNameErrorMessage()}}</mat-error>
+                    </mat-form-field>
+
+                    <br />
+
+                    <mat-form-field>
+                        <input matInput placeholder="CPF" formControlName="cpf" class="person-input" mask="000.000.000-00" [showMaskTyped]="true">
+                        <mat-hint align="end">{{frm.controls.cpf.value?.length || 0}}/11</mat-hint>
+                        <mat-error *ngIf="frm.controls.cpf.invalid">{{getCPFErrorMessage()}}</mat-error>
+                    </mat-form-field>
+
+                    <br />
+
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>Endereço</mat-card-title>
+                            <button aling="end" mat-raised-button color="primary" (click)="addAddress()">
+                                <span class="material-icons">add</span>
+                                <span>Adicionar mais um Endereço</span>
+                            </button>
+                        </mat-card-header>
+                        <mat-card-content formArrayName="address">
+                            <mat-card *ngFor="let ad of getAddressControlsFormArray.controls; let i=index">
+                                <div [formGroupName]="i">
+                                    <div fxLayout="fxLayoutGap" fxLayoutAlign="space-around center">
+                                        <mat-form-field fxFlex="20">
+                                            <input matInput placeholder="CEP" formControlName="cep" class="person-input" mask="00.000-000">
+                                            <mat-error *ngIf="getAddressControls(ad,'cep').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field>
+                                            <input matInput placeholder="Logradouro" formControlName="neighborhood" class="person-input">
+                                            <mat-error *ngIf="getAddressControls(ad,'neighborhood').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayout="fxLayoutGap" fxLayoutAlign="space-around center">
+
+                                        <mat-form-field>
+                                            <input matInput placeholder="Bairro" formControlName="street" class="person-input">
+                                            <mat-error *ngIf="getAddressControls(ad,'street').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field fxFlex="28">
+                                            <input matInput placeholder="Cidade" formControlName="city" class="person-input">
+                                            <mat-error *ngIf="getAddressControls(ad,'city').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field fxFlex="10">
+                                            <input matInput placeholder="Estado" formControlName="state" class="person-input">
+                                            <mat-error *ngIf="getAddressControls(ad,'state').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                        </mat-form-field>
+
+                                        <button mat-raised-button color="primary" (click)='removeAddress(i)'>
+                                            <span class="material-icons">remove_circle_outline</span>
+                                        </button>
+                                    </div>
+
+                                    <br />
+                                </div>
+                            </mat-card>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>Email</mat-card-title>
+                            <button aling="end" mat-raised-button color="primary" (click)="addEmail()">
+                                <span class="material-icons">add</span>
+                                <span>Adicionar mais um Email</span>
+                            </button>
+                        </mat-card-header>
+                        <mat-card-content formArrayName="emails">
+                            <mat-card *ngFor="let email of getEmailControlsFormArray.controls; let i=index">
+                                <div [formGroupName]="i">
+
+                                    <div fxLayout="fxLayoutGap" fxLayoutAlign="space-around center">
+                                        <mat-form-field>
+                                            <input matInput placeholder="email" formControlName="email" class="person-input">
+                                            <mat-error *ngIf="getEmailControls(email,'email').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                        </mat-form-field>
+
+                                        <button mat-raised-button color="primary" (click)='removeEmail(i)'>
+                                            <span class="material-icons">remove_circle_outline</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>Telefone</mat-card-title>
+                            <button aling="end" mat-raised-button color="primary" (click)="addPhone()">
+                                <span class="material-icons">add</span>
+                                <span>Adicionar mais um Telefone</span>
+                            </button>
+                        </mat-card-header>
+                        <mat-card-content formArrayName="phones">
+                            <mat-card *ngFor="let phone of getPhoneControlsFormArray.controls; let i=index">
+                                <div [formGroupName]="i">
+
+                                    <div fxLayout="fxLayoutGap" fxLayoutAlign="space-around center">
+                                        <mat-form-field>
+                                            <mat-label>Tipo de Telefone</mat-label>
+                                            <mat-select formControlName="typePhone">
+                                                <mat-option value="">Selecione um tipo de telefone</mat-option>
+                                                <mat-option [value]="typePhone.CELLULAR">Celular</mat-option>
+                                                <mat-option [value]="typePhone.RESIDENTIAL">Residencial</mat-option>
+                                                <mat-option [value]="typePhone.COMMERCIAL">Comercial</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                        <mat-form-field>
+                                            <input matInput placeholder="phone" formControlName="phone" class="person-input" [mask]="maskPhone">
+                                            <mat-error *ngIf="getPhoneControls(phone,'phone').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                        </mat-form-field>
+
+                                        <button mat-raised-button color="primary" (click)='removePhone(i)'>
+                                            <span class="material-icons">remove_circle_outline</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <br />
+
+                    <mat-form-field style="visibility: hidden; height: 0vh !important">
+                        <input matInput type="text" formControlName='id'>
+                    </mat-form-field>
+                </form>
+            </div>
+
+            <div mat-dialog-actions>
+                <button mat-button>Cancelar</button>
+                <button mat-raised-button color="primary" (click)='save(frm)' class="btnSave" [disabled]="!frm.valid">
+                  <mat-icon aria-label="icon-button">save </mat-icon>
+                  <span>Salvar o cliente</span>
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
