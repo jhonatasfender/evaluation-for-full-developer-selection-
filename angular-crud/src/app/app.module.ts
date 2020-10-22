@@ -8,7 +8,6 @@ import { ClientService } from '~app/services/client.service';
 import { AppComponent } from '~components/app/app.component';
 import { ConfirmComponent } from '~components/confirm/confirm.component';
 import { NotFoundComponent } from '~components/not-found/not-found.component';
-import { SnackbarComponent } from '~components/snackbar/snackbar.component';
 import { AuthGuard } from '~guards/auth.guard';
 import { AdminLayoutModule } from '~modules/admin-layout/admin-layout.module';
 import { LoginLayoutModule } from '~modules/login-layout/login-layout.module';
@@ -24,7 +23,6 @@ import { CEPService } from './services/cep.service';
         AppComponent,
         NotFoundComponent,
         ConfirmComponent,
-        SnackbarComponent,
     ],
     imports: [
         SharedModule,
@@ -45,8 +43,7 @@ import { CEPService } from './services/cep.service';
         { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
     ],
     entryComponents: [
-        ConfirmComponent,
-        SnackbarComponent
+        ConfirmComponent
     ],
     bootstrap: [AppComponent]
 })

@@ -9,7 +9,6 @@ import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { Client, ClientsList } from '~app/models/client';
 import { ConfirmComponent } from '~components/confirm/confirm.component';
-import { SnackbarComponent } from '~components/snackbar/snackbar.component';
 import { AuthService } from '~services/auth.service';
 import { ClientService } from '~services/client.service';
 
@@ -59,13 +58,6 @@ export class ClientComponent implements AfterViewInit, OnInit {
         this.cdr.detectChanges();
     }
 
-    private openSnack(data: any): void {
-        this.snack.openFromComponent(SnackbarComponent, {
-            data: { data: data },
-            duration: 3000
-        });
-    }
-
     public onPaginateChange(event: any): void {
         this.page = event.pageIndex + 1;
         this.pageSize = event.pageSize;
@@ -73,9 +65,7 @@ export class ClientComponent implements AfterViewInit, OnInit {
     }
 
     public applyFilter(filterValue: string): void {
-        filterValue = filterValue.trim();
-        filterValue = filterValue.toLowerCase();
-        this.search = filterValue;
+        this.search = filterValue.trim().toLowerCase();
         this.getData();
     }
 
@@ -125,18 +115,15 @@ export class ClientComponent implements AfterViewInit, OnInit {
         const dialogRef = this.dialog.open(ConfirmComponent, {
             width: '250px',
             data: {
-                title: 'Delete record',
-                message: 'Are you sure you want to delete this record?'
+                title: 'Deletar Registro!',
+                message: 'Deseja realmente deletar esse registro?'
             }
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(result);
+        dialogRef.afterClosed().subscribe((result: boolean) => {
             if (result) {
-                this.clientService.delete(row.id).subscribe((data: any) => {
-                    this.openSnack(data);
-
-                    if (data.success) {
+                this.clientService.delete(row.id).subscribe((data: Client) => {
+                    if (data) {
                         this.paginator._changePageSize(this.paginator.pageSize);
                     }
                 });
