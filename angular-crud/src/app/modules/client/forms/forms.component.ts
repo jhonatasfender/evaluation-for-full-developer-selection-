@@ -1,10 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, switchMap, tap } from 'rxjs/operators';
+import { CEP } from '~app/models/cep';
+import { Address, Client, Email, Phone, TyptePhone } from '~app/models/client';
+import { CEPService } from '~app/services/cep.service';
 import { ClientService } from '~services/client.service';
-import { SnackbarComponent } from '~components/snackbar/snackbar.component';
 
 @Component({
     selector: 'app-forms',
@@ -13,129 +15,191 @@ import { SnackbarComponent } from '~components/snackbar/snackbar.component';
 })
 export class FormsComponent implements OnInit {
     public frm: FormGroup;
-    private data: any;
+    public typePhone = TyptePhone;
+    public maskPhone = '(00) 0000-0000';
+    public isLoading = true;
 
     constructor(
-        // public dialogRef: MatDialogRef<FormsComponent>,
+        private cep: CEPService,
         private fb: FormBuilder,
         private clientService: ClientService,
-        public snack: MatSnackBar
+        public snack: MatSnackBar,
+        private router: Router,
+        private route: ActivatedRoute
     ) { }
-
-    onNoClick(): void {
-        // this.dialogRef.close();
-    }
 
     ngOnInit() {
         this.initializeForm();
     }
 
-    openSnack(data: any) {
-        this.snack.openFromComponent(SnackbarComponent, {
-            data: { data: data },
-            duration: 3000
-        });
-    }
-
     private initializeForm() {
-        const IS_EDITING = this.data === 'edit';
-        const data = this.data;
-
+        const id = this.route.snapshot.paramMap.get('id');
         this.frm = this.fb.group({
-            name: new FormControl(IS_EDITING ? data.name : null, [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
-            cpf: new FormControl(IS_EDITING ? data.cpf : null, [Validators.required, Validators.minLength(11)]),
-            id: new FormControl(IS_EDITING ? data.id : null),
-            address: this.fb.array([this.address()]),
-            emails: this.fb.array([this.email()], [Validators.required]),
-            phones: this.fb.array([this.phone()], [Validators.required])
+            name: new FormControl(
+                null,
+                [
+                    Validators.required,
+                    Validators.minLength(3),
+                    Validators.maxLength(100),
+                    Validators.pattern('^[A-Za-z0-9 ]*[A-Za-z0-9][A-Za-z0-9 ]*$')
+                ]
+            ),
+            cpf: new FormControl(null, [Validators.required, Validators.minLength(11)]),
+            id: new FormControl(null),
+            address: this.fb.array(id ? [] : [this.address()]),
+            emails: this.fb.array(id ? [] : [this.email()], [Validators.required]),
+            phones: this.fb.array(id ? [] : [this.phone()], [Validators.required])
+        });
+
+        if (id) {
+            this.clientService.getOne(parseInt(id, 10))
+                .pipe(tap((client: Client) => this.frm.patchValue({
+                    id: client.id,
+                    name: client.name,
+                    cpf: client.cpf
+                })))
+                .subscribe((client: Client) => {
+                    for (const address of client.address) {
+                        this.addAddress(address);
+                    }
+                    for (const email of client.emails) {
+                        this.addEmail(email);
+                    }
+                    for (const phone of client.phones) {
+                        this.addPhone(phone);
+                    }
+                    this.isLoading = false;
+                });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    private address(address: Address = null) {
+        const form = this.fb.group({
+            cep: new FormControl(address ? address.cep : ''),
+            city: new FormControl(address ? address.city : ''),
+            id: new FormControl(address ? address.id : null),
+            neighborhood: new FormControl(address ? address.neighborhood : ''),
+            street: new FormControl(address ? address.street : ''),
+            state: new FormControl(address ? address.state : ''),
+        });
+        form.get('cep').valueChanges
+            .pipe(
+                filter((v: string) => v && v.toString().length === 8),
+                switchMap((v: string) => {
+                    this.isLoading = true;
+                    return this.cep.search(v);
+                }),
+            )
+            .subscribe((v: CEP) => {
+                this.isLoading = false;
+                form.patchValue({
+                    id: null,
+                    city: v.localidade,
+                    neighborhood: v.logradouro,
+                    street: v.bairro,
+                    state: v.uf
+                });
+            });
+        return form;
+    }
+
+    private email(email: Email = null) {
+        return this.fb.group({
+            email: new FormControl(email ? email.email : '', [Validators.required, Validators.email]),
+            id: new FormControl(email ? email.id : null),
         });
     }
 
-    private address() {
-        return this.fb.group({
-            cep: new FormControl(0),
-            city: new FormControl(''),
-            id: new FormControl(0),
-            neighborhood: new FormControl(''),
-            street: new FormControl(''),
-            state: new FormControl(''),
-        })
-    }
-
-    private email() {
-        return this.fb.group({
-            email: new FormControl('', [Validators.email]),
-            id: new FormControl(0),
-        })
-    }
-
-    private phone() {
-        return this.fb.group({
-            phone: new FormControl(0),
-            typePhone: new FormControl('CELLULAR'),
-            id: new FormControl(0),
-        })
+    private phone(phone: Phone = null) {
+        const form = this.fb.group({
+            phone: new FormControl(phone ? phone.phone : '', [Validators.required]),
+            typePhone: new FormControl(phone ? phone.typePhone : '', [Validators.required]),
+            id: new FormControl(phone ? phone.id : null),
+        });
+        form.get('typePhone').valueChanges
+            .pipe(filter(v => v))
+            .subscribe(v => {
+                if (v === TyptePhone.CELLULAR) {
+                    this.maskPhone = '(00) 0 0000-0000';
+                } else {
+                    this.maskPhone = '(00) 0000-0000';
+                }
+            });
+        return form;
     }
 
     public save(form: FormGroup) {
-        this.clientService.save(form.value).subscribe((data: any) => {
-            debugger
-            this.openSnack(data);
+        if (this.frm.valid) {
+            this.clientService.save(form.value).subscribe((data: Client) => {
+                if (data) {
+                    this.router.navigate(['/client']);
+                }
+            });
+        }
+    }
 
-            if (data.success) {
-                // this.dialogRef.close(true);
-            }
-        });
+    public cancel() {
+        this.router.navigate(['/client']);
     }
 
     public getNameErrorMessage() {
-        return this.frm.controls.name.hasError('required') ? 'First name is required' :
-            this.frm.controls.name.hasError('minlength') ? 'Al menos 2 caracteres' : '';
+        return this.frm.controls.name.hasError('required') ? 'Por favor preencha esse campo, esse campo é obrigatório!' :
+            this.frm.controls.name.hasError('minlength') ? 'O mínimo de caractere permitido são três, por favor preencha a quantidade exigida!' :
+                this.frm.controls.name.hasError('pattern') ? 'É permitido somente letras, espaços e números, por favor solicito que cumpra a regra estabelecida!' : '';
     }
 
     public getCPFErrorMessage() {
-        return this.frm.controls.cpf.hasError('required') ? 'Last name is required' :
-            this.frm.controls.cpf.hasError('minlength') ? 'Al menos 2 caracteres' : '';
+        return this.frm.controls.cpf.hasError('required') ? 'Por favor preencha esse campo, esse campo é obrigatório!' : '';
     }
 
-    public addAddress() {
-        this.getAddressControlsFormArray.push(this.address());
+    public addAddress(address: Address = null) {
+        this.getAddressControlsFormArray.push(this.address(address));
     }
 
-    public addEmail() {
-        this.getEmailControlsFormArray.push(this.email());
+    public addEmail(email: Email = null) {
+        this.getEmailControlsFormArray.push(this.email(email));
     }
 
-    public addPhone() {
-        this.getPhoneControlsFormArray.push(this.phone());
+    public addPhone(phone: Phone = null) {
+        this.getPhoneControlsFormArray.push(this.phone(phone));
     }
 
     public removeAddress(key: number) {
-        this.getAddressControlsFormArray.removeAt(key);
+        this.getAddressControlsFormArray.controls.length > 1 && this.getAddressControlsFormArray.removeAt(key);
+    }
+
+    public removePhone(key: number) {
+        this.getPhoneControlsFormArray.controls.length > 1 && this.getPhoneControlsFormArray.removeAt(key);
+    }
+
+    public removeEmail(key: number) {
+        this.getEmailControlsFormArray.controls.length > 1 && this.getEmailControlsFormArray.removeAt(key);
     }
 
     get getAddressControlsFormArray() {
-        return (this.frm.get('address') as FormArray)
+        return (this.frm.get('address') as FormArray);
     }
 
     get getEmailControlsFormArray() {
-        return (this.frm.get('emails') as FormArray)
+        return (this.frm.get('emails') as FormArray);
     }
 
     get getPhoneControlsFormArray() {
-        return (this.frm.get('phones') as FormArray)
+        return (this.frm.get('phones') as FormArray);
     }
 
     public getAddressControls(address: FormGroup, key: string) {
-        return address.get(key)
+        return address.get(key);
     }
 
     public getEmailControls(email: FormGroup, key: string) {
-        return email.get(key)
+        return email.get(key);
     }
 
     public getPhoneControls(phone: FormGroup, key: string) {
-        return phone.get(key)
+        return phone.get(key);
     }
 
 }

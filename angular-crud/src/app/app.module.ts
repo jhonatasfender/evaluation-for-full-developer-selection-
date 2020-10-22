@@ -19,38 +19,40 @@ import { UserModule } from '~modules/user/user.module';
 import { AuthService } from '~services/auth.service';
 import { UserService } from '~services/user.service';
 import { SharedModule } from '~utils/shared.module';
+import { CEPService } from './services/cep.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TablesComponent,
-    ContactUsComponent,
-    NotFoundComponent,
-    ConfirmComponent,
-    SnackbarComponent,
-  ],
-  imports: [
-    SharedModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    AdminLayoutModule,
-    LoginLayoutModule,
-    UserModule,
-  ],
-  providers: [
-    AuthGuard,
-    AuthService,
-    UserService,
-    ClientService,
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
-  ],
-  entryComponents: [
-    ConfirmComponent,
-    SnackbarComponent
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        TablesComponent,
+        ContactUsComponent,
+        NotFoundComponent,
+        ConfirmComponent,
+        SnackbarComponent,
+    ],
+    imports: [
+        SharedModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        AdminLayoutModule,
+        LoginLayoutModule,
+        UserModule,
+    ],
+    providers: [
+        AuthGuard,
+        AuthService,
+        UserService,
+        ClientService,
+        CEPService,
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
+    ],
+    entryComponents: [
+        ConfirmComponent,
+        SnackbarComponent
+    ],
+    bootstrap: [AppComponent]
 })
 
 export class AppModule { }
