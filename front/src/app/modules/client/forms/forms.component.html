@@ -154,7 +154,7 @@
 
             <div mat-dialog-actions>
                 <button mat-button (click)="cancel()">Cancelar</button>
-                <button mat-raised-button color="primary" (click)='save(frm)' class="btnSave" [disabled]="!frm.valid">
+                <button mat-raised-button color="primary" (click)='save(frm)' class="btnSave" [disabled]="permissions.indexOf('ROLE_USER') === 0 || !frm.valid">
                     <mat-icon aria-label="icon-button">save </mat-icon>
                     <span>Salvar o cliente</span>
                 </button>

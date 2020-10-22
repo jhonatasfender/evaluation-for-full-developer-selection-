@@ -1,18 +1,14 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import jwt_decode from 'jwt-decode';
 import { BehaviorSubject } from 'rxjs';
-import { Response } from '~models/response';
+import { AuthTokenJWT } from '~models/auth';
 import { User } from '~models/user';
 import { CONSTANST } from '~utils/constanst';
-
 
 @Injectable()
 export class AuthService {
     public loggedIn = new BehaviorSubject<boolean>(this.hasToken());
-
-    private headers = new HttpHeaders({
-        'x-access-token': localStorage.getItem('token')
-    });
 
     get isLoggedIn() {
         return this.loggedIn.asObservable();
@@ -22,7 +18,15 @@ export class AuthService {
         public http: HttpClient
     ) { }
 
-    login(user: User) {
+    public static getDecodedAccessToken(token: string): AuthTokenJWT {
+        try {
+            return jwt_decode(token);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    public login(user: User) {
         if (user.user_name !== '' && user.password !== '') {
             return this.http.post(
                 CONSTANST.routes.authorization.login, {
@@ -33,14 +37,7 @@ export class AuthService {
         }
     }
 
-    logout() {
-        return this.http.get<Response>(
-            CONSTANST.routes.authorization.logout,
-            { headers: this.headers }
-        );
-    }
-
-    hasToken(): boolean {
+    public hasToken(): boolean {
         return !!localStorage.getItem('token');
     }
 }

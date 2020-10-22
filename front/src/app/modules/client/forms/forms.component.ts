@@ -6,6 +6,7 @@ import { filter, switchMap, tap } from 'rxjs/operators';
 import { CEP } from '~app/models/cep';
 import { Address, Client, Email, Phone, TyptePhone } from '~app/models/client';
 import { CEPService } from '~app/services/cep.service';
+import { CONSTANST } from '~app/utils/constanst';
 import { ClientService } from '~services/client.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class FormsComponent implements OnInit {
     public typePhone = TyptePhone;
     public maskPhone = '(00) 0000-0000';
     public isLoading = true;
+    public permissions = CONSTANST.permissions;
 
     constructor(
         private cep: CEPService,
@@ -34,6 +36,8 @@ export class FormsComponent implements OnInit {
 
     private initializeForm() {
         const id = this.route.snapshot.paramMap.get('id');
+        const accentuation = 'áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ';
+        const defaultRex = `A-Za-z0-9_${accentuation}`;
         this.frm = this.fb.group({
             name: new FormControl(
                 null,
@@ -41,7 +45,7 @@ export class FormsComponent implements OnInit {
                     Validators.required,
                     Validators.minLength(3),
                     Validators.maxLength(100),
-                    Validators.pattern('^[A-Za-z0-9 ]*[A-Za-z0-9][A-Za-z0-9 ]*$')
+                    Validators.pattern(`^[${defaultRex} ]*[A-Za-z0-9${accentuation}][${defaultRex} ]*$`)
                 ]
             ),
             cpf: new FormControl(null, [Validators.required, Validators.minLength(11)]),
@@ -69,9 +73,15 @@ export class FormsComponent implements OnInit {
                         this.addPhone(phone);
                     }
                     this.isLoading = false;
+
+                    this.frm.markAllAsTouched();
+                    this.frm.updateValueAndValidity();
                 });
         } else {
             this.isLoading = false;
+            if (this.permissions.indexOf('ROLE_USER') === 0) {
+                this.router.navigate(['/client']);
+            }
         }
     }
 
@@ -131,7 +141,7 @@ export class FormsComponent implements OnInit {
     }
 
     public save(form: FormGroup) {
-        if (this.frm.valid) {
+        if (this.permissions.indexOf('ROLE_USER') !== 0 && this.frm.valid) {
             this.clientService.save(form.value).subscribe((data: Client) => {
                 if (data) {
                     this.router.navigate(['/client']);

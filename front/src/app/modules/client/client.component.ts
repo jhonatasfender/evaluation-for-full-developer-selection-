@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { Client, ClientsList } from '~app/models/client';
+import { CONSTANST } from '~app/utils/constanst';
 import { ConfirmComponent } from '~components/confirm/confirm.component';
 import { AuthService } from '~services/auth.service';
 import { ClientService } from '~services/client.service';
@@ -21,7 +22,7 @@ import { ClientService } from '~services/client.service';
 export class ClientComponent implements AfterViewInit, OnInit {
     public readonly displayedColumns = ['id', 'cpf', 'name', 'action'];
     public readonly pageSizeOptions = [5, 10, 20, 40, 100];
-    public pageSize = 20;
+    public pageSize = 10;
     public dataSource = new MatTableDataSource<Client>();
     public pageEvent: PageEvent;
     public resultsLength = 0;
@@ -31,6 +32,7 @@ export class ClientComponent implements AfterViewInit, OnInit {
     public totalItems = 0;
     public search = '';
     public value: string;
+    public permissions = CONSTANST.permissions;
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;

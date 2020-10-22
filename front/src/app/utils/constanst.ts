@@ -1,7 +1,7 @@
 const HOST = 'http://localhost:8080';
 
 export const CONSTANST = {
-    permissions: {},
+    permissions: [] as string[],
     routes: {
         authorization: {
             login: HOST + '/auth',

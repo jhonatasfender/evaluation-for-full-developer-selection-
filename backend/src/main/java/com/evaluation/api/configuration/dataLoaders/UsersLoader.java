@@ -38,11 +38,11 @@ public class UsersLoader implements ApplicationListener<ContextRefreshedEvent> {
             adminRoles
         );
         createUserIfNotFound(
-            "user",
+            "comum",
             "$2b$10$hPUDiF4dB9.X/0gQqBg1n.Bwz6Y7YEazew0oATLKfUaRj/2MlosfK",
-            "user",
-            "user",
-            "enabled@user.com",
+            "Comum",
+            "Comum",
+            "comum@user.com",
             true,
             new Date(1514764800000L),
             userRoles

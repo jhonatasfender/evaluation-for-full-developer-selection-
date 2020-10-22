@@ -4,14 +4,14 @@
             <img src="assets/img/1.png" width="200px" onmousedown="return false;">
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <mat-form-field class="full-width-input">
-                    <input matInput placeholder="Usuário" formControlName="user_name" required>
+                    <input matInput placeholder="Usuário" formControlName="user_name" required autocomplete="off">
                     <mat-error *ngIf="isFieldInvalid('user_name')">
                         Por favor digite o nome do usuário cadastrado
                     </mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="full-width-input separate">
-                    <input matInput type="password" placeholder="Senha" formControlName="password" required>
+                    <input matInput type="password" placeholder="Senha" formControlName="password" required autocomplete="off">
                     <mat-error *ngIf="isFieldInvalid('user_name')">
                         Por favor digite a senha
                     </mat-error>

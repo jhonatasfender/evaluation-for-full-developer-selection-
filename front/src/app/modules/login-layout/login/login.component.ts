@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { CONSTANST } from '~app/utils/constanst';
 import { AuthService } from '~services/auth.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class LoginComponent implements OnInit {
         public snack: MatSnackBar,
     ) { }
 
-    ngOnInit() {
+    public ngOnInit(): void {
         if (localStorage.getItem('token')) {
             this.router.navigate(['/']);
         }
@@ -32,28 +33,31 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    public isFieldInvalid(field: string) {
+    public isFieldInvalid(field: string): boolean {
         return (
             (!this.form.get(field).valid && this.form.get(field).touched) ||
             (this.form.get(field).untouched && this.formSubmitAttempt)
         );
     }
 
-    onSubmit() {
+    public onSubmit(): void {
         if (this.form.valid) {
             this.isLogin = true;
             this.authService.login(this.form.value).subscribe((data: any) => {
                 this.isLogin = false;
                 if (data.token) {
                     this.authService.loggedIn.next(true);
+
+                    const token = AuthService.getDecodedAccessToken(data.token);
+                    CONSTANST.permissions = token.rules.map(v => v.authority);
+
                     localStorage.setItem('token', data.token);
                     this.router.navigate(['/']);
                 }
             }, (error) => {
                 console.log(error);
                 this.isLogin = false;
-            }
-            );
+            });
         }
         this.formSubmitAttempt = true;
     }

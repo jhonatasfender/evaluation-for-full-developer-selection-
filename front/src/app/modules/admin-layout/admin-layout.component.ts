@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import { AuthService } from '~services/auth.service';
 import { ConfirmComponent } from '~components/confirm/confirm.component';
+import { CONSTANST } from '~app/utils/constanst';
 
 @Component({
     selector: 'app-admin-layout',
@@ -39,6 +40,12 @@ export class AdminLayoutComponent implements OnInit {
         router.events.subscribe((event: RouterEvent) => {
             this._navigationInterceptor(event);
         });
+
+        const token: string = localStorage.getItem('token');
+        if (token) {
+            const tokenDecode = AuthService.getDecodedAccessToken(token);
+            CONSTANST.permissions = tokenDecode.rules.map(v => v.authority);
+        }
     }
 
     ngOnInit() {
@@ -59,13 +66,9 @@ export class AdminLayoutComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.authService.logout().subscribe((data: any) => {
-                    if (data.success) {
-                        this.authService.loggedIn.next(false);
-                        localStorage.removeItem('token');
-                        this.router.navigate(['/login']);
-                    }
-                });
+                this.authService.loggedIn.next(false);
+                localStorage.removeItem('token');
+                this.router.navigate(['/login']);
             }
         });
     }

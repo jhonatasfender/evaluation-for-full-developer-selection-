@@ -20,5 +20,4 @@ import { AdminLayoutComponent } from './admin-layout.component';
     providers: [],
     exports: []
 })
-export class AdminLayoutModule {
-}
+export class AdminLayoutModule { }

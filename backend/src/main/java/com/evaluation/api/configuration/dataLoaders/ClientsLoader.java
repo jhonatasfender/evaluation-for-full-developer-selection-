@@ -39,7 +39,7 @@ public class ClientsLoader implements ApplicationListener<ContextRefreshedEvent>
 
             Client client = createClientsIfNotFound(new Client(
                 null,
-                faker.name().fullName(),
+                faker.name().fullName().replace(".", ""),
                 faker.number().digits(11),
                 address,
                 phones,
