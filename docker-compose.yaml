@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  backend:
+    build: ./backend/
+    container_name: backend
+
+  front:
+    build: ./front/
+    container_name: front
+    ports:
+        - 4200:4200
