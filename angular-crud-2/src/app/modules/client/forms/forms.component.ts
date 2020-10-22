@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { CEP } from '~app/models/cep';
-import { TyptePhone, Client, Address, Email, Phone } from '~app/models/client';
+import { Address, Client, Email, Phone, TyptePhone } from '~app/models/client';
 import { CEPService } from '~app/services/cep.service';
-import { SnackbarComponent } from '~components/snackbar/snackbar.component';
 import { ClientService } from '~services/client.service';
-import { pipe } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
-
 
 @Component({
     selector: 'app-forms',

@@ -44,29 +44,29 @@
                                     <div fxLayout="fxLayoutGap" fxLayoutAlign="space-around center">
                                         <mat-form-field fxFlex="20">
                                             <input matInput placeholder="CEP" formControlName="cep" class="person-input" mask="00.000-000">
-                                            <mat-error *ngIf="getAddressControls(ad,'cep').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                            <mat-error *ngIf="getAddressControls(ad, 'cep').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
                                         <mat-form-field>
                                             <input matInput placeholder="Logradouro" formControlName="neighborhood" class="person-input">
-                                            <mat-error *ngIf="getAddressControls(ad,'neighborhood').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                            <mat-error *ngIf="getAddressControls(ad, 'neighborhood').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div fxLayout="fxLayoutGap" fxLayoutAlign="space-around center">
 
                                         <mat-form-field>
                                             <input matInput placeholder="Bairro" formControlName="street" class="person-input">
-                                            <mat-error *ngIf="getAddressControls(ad,'street').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                            <mat-error *ngIf="getAddressControls(ad, 'street').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
                                         <mat-form-field fxFlex="28">
                                             <input matInput placeholder="Cidade" formControlName="city" class="person-input">
-                                            <mat-error *ngIf="getAddressControls(ad,'city').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                            <mat-error *ngIf="getAddressControls(ad, 'city').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
                                         <mat-form-field fxFlex="10">
                                             <input matInput placeholder="Estado" formControlName="state" class="person-input">
-                                            <mat-error *ngIf="getAddressControls(ad,'state').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                            <mat-error *ngIf="getAddressControls(ad, 'state').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
                                         <button mat-raised-button color="primary" (click)='removeAddress(i)'>
@@ -95,7 +95,7 @@
                                     <div fxLayout="fxLayoutGap" fxLayoutAlign="space-around center">
                                         <mat-form-field>
                                             <input matInput placeholder="email" formControlName="email" class="person-input">
-                                            <mat-error *ngIf="getEmailControls(email,'email').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                            <mat-error *ngIf="getEmailControls(email, 'email').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
                                         <button mat-raised-button color="primary" (click)='removeEmail(i)'>
@@ -132,7 +132,7 @@
 
                                         <mat-form-field>
                                             <input matInput placeholder="phone" formControlName="phone" class="person-input" [mask]="maskPhone">
-                                            <mat-error *ngIf="getPhoneControls(phone,'phone').invalid">{{getCPFErrorMessage()}}</mat-error>
+                                            <mat-error *ngIf="getPhoneControls(phone, 'phone').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
                                         <button mat-raised-button color="primary" (click)='removePhone(i)'>
@@ -155,8 +155,8 @@
             <div mat-dialog-actions>
                 <button mat-button (click)="cancel()">Cancelar</button>
                 <button mat-raised-button color="primary" (click)='save(frm)' class="btnSave" [disabled]="!frm.valid">
-                  <mat-icon aria-label="icon-button">save </mat-icon>
-                  <span>Salvar o cliente</span>
+                    <mat-icon aria-label="icon-button">save </mat-icon>
+                    <span>Salvar o cliente</span>
                 </button>
             </div>
         </mat-card-content>

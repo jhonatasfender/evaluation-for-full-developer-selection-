@@ -8,39 +8,39 @@ import { CONSTANST } from '~utils/constanst';
 
 @Injectable()
 export class AuthService {
-  public loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+    public loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
-  get isLoggedIn() {
-    return this.loggedIn.asObservable();
-  }
+    private headers = new HttpHeaders({
+        'x-access-token': localStorage.getItem('token')
+    });
 
-  constructor(
-    public http: HttpClient
-  ) { }
-
-  headers = new HttpHeaders({
-    'x-access-token': localStorage.getItem('token')
-  });
-
-  login(user: User) {
-    if (user.user_name !== '' && user.password !== '') {
-      return this.http.post(
-        CONSTANST.routes.authorization.login, {
-        username: user.user_name,
-        txtEmail: user.email,
-        password: user.password
-      });
+    get isLoggedIn() {
+        return this.loggedIn.asObservable();
     }
-  }
 
-  logout() {
-    return this.http.get<Response>(
-      CONSTANST.routes.authorization.logout,
-      { headers: this.headers }
-    );
-  }
+    constructor(
+        public http: HttpClient
+    ) { }
 
-  hasToken(): boolean {
-    return !!localStorage.getItem('token');
-  }
+    login(user: User) {
+        if (user.user_name !== '' && user.password !== '') {
+            return this.http.post(
+                CONSTANST.routes.authorization.login, {
+                username: user.user_name,
+                txtEmail: user.email,
+                password: user.password
+            });
+        }
+    }
+
+    logout() {
+        return this.http.get<Response>(
+            CONSTANST.routes.authorization.logout,
+            { headers: this.headers }
+        );
+    }
+
+    hasToken(): boolean {
+        return !!localStorage.getItem('token');
+    }
 }

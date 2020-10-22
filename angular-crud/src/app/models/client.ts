@@ -28,9 +28,9 @@ export interface Client {
 }
 
 export enum TyptePhone {
-    RESIDENTIAL,
-    COMMERCIAL,
-    CELLULAR
+    RESIDENTIAL = 'RESIDENTIAL',
+    COMMERCIAL = 'COMMERCIAL',
+    CELLULAR = 'CELLULAR'
 }
 
 export interface ClientsList {

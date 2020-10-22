@@ -7,25 +7,21 @@ import '~app/rxjs-operators';
 import { ClientService } from '~app/services/client.service';
 import { AppComponent } from '~components/app/app.component';
 import { ConfirmComponent } from '~components/confirm/confirm.component';
-import { ContactUsComponent } from '~components/contact-us/contact-us.component';
 import { NotFoundComponent } from '~components/not-found/not-found.component';
 import { SnackbarComponent } from '~components/snackbar/snackbar.component';
-import { TablesComponent } from '~components/tables/tables.component';
 import { AuthGuard } from '~guards/auth.guard';
-import { HttpConfigInterceptor } from "./interceptor/httpconfig.interceptor";
 import { AdminLayoutModule } from '~modules/admin-layout/admin-layout.module';
 import { LoginLayoutModule } from '~modules/login-layout/login-layout.module';
 import { UserModule } from '~modules/user/user.module';
 import { AuthService } from '~services/auth.service';
 import { UserService } from '~services/user.service';
 import { SharedModule } from '~utils/shared.module';
+import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
 import { CEPService } from './services/cep.service';
 
 @NgModule({
     declarations: [
         AppComponent,
-        TablesComponent,
-        ContactUsComponent,
         NotFoundComponent,
         ConfirmComponent,
         SnackbarComponent,

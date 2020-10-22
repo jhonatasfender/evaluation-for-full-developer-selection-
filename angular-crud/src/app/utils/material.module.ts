@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -16,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
@@ -31,6 +30,29 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
+const matRangeLabelIntl = (page: number, pageSize: number, length: number) => {
+    if (length === 0 || pageSize === 0) {
+        return `0 de ${length}`;
+    }
+    length = Math.max(length, 0);
+    const startIndex = page * pageSize;
+
+    const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+    return `${startIndex + 1} - ${endIndex} de ${length}`;
+};
+
+
+export function MyPaginatorIntl() {
+    const paginatorIntl = new MatPaginatorIntl();
+
+    paginatorIntl.itemsPerPageLabel = `Item por pagina`;
+    paginatorIntl.nextPageLabel = `Próxima págian`;
+    paginatorIntl.previousPageLabel = `Voltar Página`;
+    paginatorIntl.getRangeLabel = matRangeLabelIntl;
+
+    return paginatorIntl;
+}
 
 @NgModule({
     imports: [
@@ -100,6 +122,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatTabsModule,
         MatToolbarModule,
         MatTooltipModule
+    ],
+    providers: [
+        { provide: MatPaginatorIntl, useValue: MyPaginatorIntl() },
     ]
 })
 export class MaterialComponentsModule { }

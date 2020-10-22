@@ -1,7 +1,6 @@
 import {
     HttpEvent, HttpHandler, HttpInterceptor,
-    HttpRequest,
-    HttpResponse
+    HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -22,12 +21,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
         request = request.clone({ headers: request.headers.set('Accept', 'application/json') });
 
-        return next.handle(request).pipe(
-            map((event: HttpEvent<any>) => {
-                if (event instanceof HttpResponse) {
-                    console.log('event--->>>', event);
-                }
-                return event;
-            }));
+        return next.handle(request).pipe(map((event: HttpEvent<any>) => event));
     }
 }

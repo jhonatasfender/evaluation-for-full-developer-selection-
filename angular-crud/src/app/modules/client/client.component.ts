@@ -10,11 +10,8 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { Client, ClientsList } from '~app/models/client';
 import { ConfirmComponent } from '~components/confirm/confirm.component';
 import { SnackbarComponent } from '~components/snackbar/snackbar.component';
-import { FormsComponent } from '~modules/client/forms/forms.component';
 import { AuthService } from '~services/auth.service';
 import { ClientService } from '~services/client.service';
-
-
 
 @Component({
     selector: 'app-client',

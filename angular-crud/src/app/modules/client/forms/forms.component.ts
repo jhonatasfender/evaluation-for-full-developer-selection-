@@ -28,7 +28,7 @@ export class FormsComponent implements OnInit {
         private route: ActivatedRoute
     ) { }
 
-    ngOnInit() {
+    public ngOnInit(): void {
         this.initializeForm();
     }
 
@@ -75,7 +75,7 @@ export class FormsComponent implements OnInit {
         }
     }
 
-    private address(address: Address = null) {
+    private address(address?: Address) {
         const form = this.fb.group({
             cep: new FormControl(address ? address.cep : ''),
             city: new FormControl(address ? address.city : ''),
@@ -105,14 +105,14 @@ export class FormsComponent implements OnInit {
         return form;
     }
 
-    private email(email: Email = null) {
+    private email(email?: Email) {
         return this.fb.group({
             email: new FormControl(email ? email.email : '', [Validators.required, Validators.email]),
             id: new FormControl(email ? email.id : null),
         });
     }
 
-    private phone(phone: Phone = null) {
+    private phone(phone?: Phone) {
         const form = this.fb.group({
             phone: new FormControl(phone ? phone.phone : '', [Validators.required]),
             typePhone: new FormControl(phone ? phone.typePhone : '', [Validators.required]),
@@ -154,15 +154,15 @@ export class FormsComponent implements OnInit {
         return this.frm.controls.cpf.hasError('required') ? 'Por favor preencha esse campo, esse campo é obrigatório!' : '';
     }
 
-    public addAddress(address: Address = null) {
+    public addAddress(address?: Address) {
         this.getAddressControlsFormArray.push(this.address(address));
     }
 
-    public addEmail(email: Email = null) {
+    public addEmail(email?: Email) {
         this.getEmailControlsFormArray.push(this.email(email));
     }
 
-    public addPhone(phone: Phone = null) {
+    public addPhone(phone?: Phone) {
         this.getPhoneControlsFormArray.push(this.phone(phone));
     }
 
