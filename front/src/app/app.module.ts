@@ -11,7 +11,6 @@ import { NotFoundComponent } from '~components/not-found/not-found.component';
 import { AuthGuard } from '~guards/auth.guard';
 import { AdminLayoutModule } from '~modules/admin-layout/admin-layout.module';
 import { LoginLayoutModule } from '~modules/login-layout/login-layout.module';
-import { UserModule } from '~modules/user/user.module';
 import { AuthService } from '~services/auth.service';
 import { UserService } from '~services/user.service';
 import { SharedModule } from '~utils/shared.module';
@@ -32,7 +31,6 @@ import { CEPService } from './services/cep.service';
         HttpClientModule,
         AdminLayoutModule,
         LoginLayoutModule,
-        UserModule,
     ],
     providers: [
         AuthGuard,

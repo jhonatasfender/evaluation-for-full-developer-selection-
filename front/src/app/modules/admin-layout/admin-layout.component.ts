@@ -54,7 +54,7 @@ export class AdminLayoutComponent implements OnInit {
             width: '250px',
             data: {
                 title: 'Logout',
-                message: 'Close session?'
+                message: 'Deseja realizar essa sessão?'
             }
         });
         dialogRef.afterClosed().subscribe(result => {

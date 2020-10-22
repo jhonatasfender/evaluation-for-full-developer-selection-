@@ -37,12 +37,12 @@ public class JWTTokenFilter extends OncePerRequestFilter {
     }
 
     private void authorizeRequest(HttpServletRequest request) {
-        logger.debug("Processing authentication for '{}'", request.getRequestURL());
+        logger.debug("Processando autenticação para '{}'", request.getRequestURL());
 
         final String requestHeader = request.getHeader(this.tokenHeader);
 
         if (requestHeader == null || !requestHeader.startsWith("Bearer ")) {
-            logger.warn("Authorization failed. No JWT token found");
+            logger.warn("Falha na autorização. Nenhum token JWT encontrado");
             return;
         }
 
@@ -52,27 +52,27 @@ public class JWTTokenFilter extends OncePerRequestFilter {
         try {
             username = jwtUtil.getUsernameFromToken(authToken);
         } catch (IllegalArgumentException e) {
-            logger.error("Error during getting username from token", e);
+            logger.error("Erro ao obter nome de usuário do token", e);
             return;
         } catch (ExpiredJwtException e) {
-            logger.warn("The token has expired", e);
+            logger.warn("O token expirou", e);
             return;
         }
 
         if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) return;
 
-        logger.debug("Security context was null, so authorizing user '{}'...", username);
+        logger.debug("O contexto de segurança era nulo, portanto, autorizando o usuário '{}' ...", username);
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
         if (!jwtUtil.validateToken(authToken, userDetails)) {
-            logger.error("Not a valid token!!!");
+            logger.error("Não é um token válido!!!");
             return;
         }
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        logger.info("Authorized user '{}', setting security context...", username);
+        logger.info("Usuário autorizado '{}', definindo contexto de segurança ...", username);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
