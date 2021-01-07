@@ -33,7 +33,7 @@
                     <mat-card>
                         <mat-card-header>
                             <mat-card-title>Endereço</mat-card-title>
-                            <button aling="end" mat-raised-button color="primary" (click)="addAddress()">
+                            <button aling="end" mat-raised-button color="primary" (click)="addAddress()" [disabled]="permissions.indexOf('ROLE_USER') === 0">
                                 <span class="material-icons">add</span>
                                 <span>Adicionar mais um Endereço</span>
                             </button>
@@ -69,7 +69,7 @@
                                             <mat-error *ngIf="getAddressControls(ad, 'state').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
-                                        <button mat-raised-button color="primary" (click)='removeAddress(i)'>
+                                        <button mat-raised-button color="primary" (click)='removeAddress(i)' [disabled]="permissions.indexOf('ROLE_USER') === 0">
                                             <span class="material-icons">remove_circle_outline</span>
                                         </button>
                                     </div>
@@ -83,7 +83,7 @@
                     <mat-card>
                         <mat-card-header>
                             <mat-card-title>Email</mat-card-title>
-                            <button aling="end" mat-raised-button color="primary" (click)="addEmail()">
+                            <button aling="end" mat-raised-button color="primary" (click)="addEmail()" [disabled]="permissions.indexOf('ROLE_USER') === 0">
                                 <span class="material-icons">add</span>
                                 <span>Adicionar mais um Email</span>
                             </button>
@@ -98,7 +98,7 @@
                                             <mat-error *ngIf="getEmailControls(email, 'email').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
-                                        <button mat-raised-button color="primary" (click)='removeEmail(i)'>
+                                        <button mat-raised-button color="primary" (click)='removeEmail(i)' [disabled]="permissions.indexOf('ROLE_USER') === 0">
                                             <span class="material-icons">remove_circle_outline</span>
                                         </button>
                                     </div>
@@ -110,7 +110,7 @@
                     <mat-card>
                         <mat-card-header>
                             <mat-card-title>Telefone</mat-card-title>
-                            <button aling="end" mat-raised-button color="primary" (click)="addPhone()">
+                            <button aling="end" mat-raised-button color="primary" (click)="addPhone()" [disabled]="permissions.indexOf('ROLE_USER') === 0">
                                 <span class="material-icons">add</span>
                                 <span>Adicionar mais um Telefone</span>
                             </button>
@@ -135,7 +135,7 @@
                                             <mat-error *ngIf="getPhoneControls(phone, 'phone').invalid">{{getCPFErrorMessage()}}</mat-error>
                                         </mat-form-field>
 
-                                        <button mat-raised-button color="primary" (click)='removePhone(i)'>
+                                        <button mat-raised-button color="primary" (click)='removePhone(i)' [disabled]="permissions.indexOf('ROLE_USER') === 0">
                                             <span class="material-icons">remove_circle_outline</span>
                                         </button>
                                     </div>
