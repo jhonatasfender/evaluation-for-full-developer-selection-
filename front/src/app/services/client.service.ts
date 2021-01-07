@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Client, ClientsList } from '~app/models/client';
 import { CONSTANST } from '~utils/constanst';
 
@@ -17,9 +17,6 @@ export class ClientService {
         page: number,
         search: string
     ): Observable<ClientsList> {
-
-        // revisar essa parada
-        // verificar se precisa adicionar na variável novamente
         let params = new HttpParams();
         params = params.append('active', sortActive);
         params = params.append('order', order);
