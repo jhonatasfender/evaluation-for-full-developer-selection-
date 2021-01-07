@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Phone extends ReferenceClient {
+public class Phone {
     @Id
     @GeneratedValue
     private Long id;
@@ -27,6 +27,6 @@ public class Phone extends ReferenceClient {
 
     @JsonBackReference
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Client client;
 }

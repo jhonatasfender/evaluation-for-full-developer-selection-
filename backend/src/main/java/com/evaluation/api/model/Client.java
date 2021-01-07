@@ -1,6 +1,5 @@
 package com.evaluation.api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,8 +23,6 @@ public class Client {
     private Long id;
 
     @NotNull
-    @Min(value = 3)
-    @Max(value = 100)
     private String name;
 
     @NotNull
@@ -33,7 +30,6 @@ public class Client {
 
     @JsonManagedReference
     @OneToMany(
-        fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
         orphanRemoval = true,
         mappedBy = "client"
@@ -41,19 +37,17 @@ public class Client {
     private Set<Address> address;
 
     @JsonManagedReference
-    @NotNull
+    @NotNull // Colocar os not null nos DTOs
     @OneToMany(
-        fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
         orphanRemoval = true,
         mappedBy = "client"
     )
     private Set<Phone> phones;
 
-    @JsonManagedReference
+    @JsonManagedReference // depois que criar os DTOs remover essas annotations
     @NotNull
     @OneToMany(
-        fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
         orphanRemoval = true,
         mappedBy = "client"
@@ -64,6 +58,7 @@ public class Client {
         this.id = id;
     }
 
+    // verificar
     public Client(Client client) {
         this.id = client.getId();
         this.name = client.getName();

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Address extends ReferenceClient {
+public class Address {
     @Id
     @GeneratedValue
     private Long id;
@@ -24,6 +24,6 @@ public class Address extends ReferenceClient {
     private String state;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Client client;
 }

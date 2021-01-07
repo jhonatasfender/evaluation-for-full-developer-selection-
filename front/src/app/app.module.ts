@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '~app/app.routes';
-import '~app/rxjs-operators';
 import { ClientService } from '~app/services/client.service';
 import { AppComponent } from '~components/app/app.component';
 import { ConfirmComponent } from '~components/confirm/confirm.component';

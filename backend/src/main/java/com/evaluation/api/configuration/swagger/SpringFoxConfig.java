@@ -26,16 +26,16 @@ public class SpringFoxConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-            "My REST API",
-            "Some custom description of API.",
-            "API TOS",
-            "Terms of service",
+            "REST API",
+            "Teste de avaliação.",
+            "1.0.0",
+            "Termos",
             new Contact(
                 "Jônatas Rodrigues",
                 "https://jhonatasfender.github.io/",
                 "jhoantas.fender@gmail.com"
             ),
-            "License of API", "API license URL", Collections.emptyList());
+            "Licença de API", "URL de licença API", Collections.emptyList());
     }
 
 }

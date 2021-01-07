@@ -1,4 +1,4 @@
-package com.evaluation.api.configuration.dataLoaders;
+package com.evaluation.api.configuration.dataloaders;
 
 import com.evaluation.api.configuration.security.user.*;
 import org.springframework.context.ApplicationListener;

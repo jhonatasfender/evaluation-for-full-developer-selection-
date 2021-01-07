@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Email extends ReferenceClient {
+public class Email {
     @Id
     @GeneratedValue
     private Long id;
@@ -26,7 +26,6 @@ public class Email extends ReferenceClient {
     @JsonBackReference
     @NotNull
     @ManyToOne(
-        fetch = FetchType.LAZY,
         cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE

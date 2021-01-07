@@ -17,6 +17,9 @@ export class ClientService {
         page: number,
         search: string
     ): Observable<ClientsList> {
+
+        // revisar essa parada
+        // verificar se precisa adicionar na variável novamente
         let params = new HttpParams();
         params = params.append('active', sortActive);
         params = params.append('order', order);
